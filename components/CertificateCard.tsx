@@ -66,34 +66,37 @@ interface SpecRowProps {
   icon: string;
   bold?: boolean;
   iconColor?: string;
+  multiline?: boolean;
 }
 
-function SpecRow({ label, value, icon, bold, iconColor }: SpecRowProps) {
+function SpecRow({ label, value, icon, bold, iconColor, multiline }: SpecRowProps) {
   if (!value) return null;
+  const isMulti = multiline || label === "Description";
+  const isLong = value.length > 30;
   return (
     <div
-      className="flex items-center border-b border-gray-200/60 last:border-b-0"
+      className={`flex ${isMulti ? "items-start" : "items-center"} border-b border-gray-200/60 last:border-b-0`}
       style={{ paddingTop: "3px", paddingBottom: "3px" }}
     >
-      <span className="shrink-0 mr-[8px]">
-        <I d={ICONS[icon] || ICONS.diamond} className="h-[21px] w-[21px]" color={iconColor || "#c59d3f"} />
+      <span className="shrink-0 mr-[8px]" style={isMulti ? { marginTop: "1px" } : undefined}>
+        <I d={ICONS[icon] || ICONS.diamond} className="h-[17px] w-[17px]" color={iconColor || "#c59d3f"} />
       </span>
       <span
         className="shrink-0 font-bold text-[#0c1e36] tracking-tight"
-        style={{ width: "122px", fontSize: "19px", lineHeight: 1.2 }}
+        style={{ width: "118px", fontSize: "14px", lineHeight: 1.25 }}
       >
         {label}
       </span>
       <span
         className="shrink-0 text-center font-bold text-[#94a3b8]"
-        style={{ width: "12px", fontSize: "19px" }}
+        style={{ width: "12px", fontSize: "14px", lineHeight: 1.25 }}
       >
         :
       </span>
       <span
         title={value}
-        className={`flex-1 pl-2.5 truncate ${bold ? "font-black text-[#0c1e36]" : "font-semibold text-[#1e293b]"}`}
-        style={{ fontSize: "19px", lineHeight: 1.2 }}
+        className={`flex-1 min-w-0 pl-2.5 ${isMulti ? "whitespace-pre-wrap break-words" : "truncate"} ${bold ? "font-black text-[#0c1e36]" : "font-semibold text-[#1e293b]"}`}
+        style={{ fontSize: isLong && !isMulti ? "13px" : "14px", lineHeight: 1.25 }}
       >
         {value}
       </span>
@@ -548,12 +551,12 @@ export default function CertificateCard({ report }: { report: GemReport }) {
 
             {/* ═══════════════════════════ BODY ═══════════════════════════ */}
             <div className="flex flex-1 items-center justify-between gap-3" style={{ minHeight: 0, paddingTop: 3, paddingBottom: 2 }}>
-              {/* ── LEFT: Specifications Table (53%) ── */}
-              <div style={{ width: "53%", alignSelf: "stretch", display: "flex", flexDirection: "column", justifyContent: "space-between", paddingTop: 1, paddingBottom: 1 }}>
+              {/* ── LEFT: Specifications Table (55%) ── */}
+              <div style={{ width: "55%", alignSelf: "stretch", display: "flex", flexDirection: "column", justifyContent: "space-between", paddingTop: 1, paddingBottom: 1 }}>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1 }}>
                   {isGemstone ? (
                     <>
-                      <SpecRow icon="diamond" label="Description" value={report.description} iconColor={isGemstone ? "#10b981" : "#c59d3f"} />
+                      <SpecRow icon="diamond" label="Description" value={report.description} multiline iconColor={isGemstone ? "#10b981" : "#c59d3f"} />
                       {report.species && <SpecRow icon="shapeCut" label="Species" value={report.species} iconColor="#10b981" />}
                       <SpecRow icon="ruler" label="Measurement" value={report.measurements} iconColor="#10b981" />
                       <SpecRow icon="shapeCut" label="Shape & Cut" value={report.shape} iconColor="#10b981" />
@@ -568,7 +571,7 @@ export default function CertificateCard({ report }: { report: GemReport }) {
                     </>
                   ) : (
                     <>
-                      <SpecRow icon="diamond" label="Description" value={report.description} />
+                      <SpecRow icon="diamond" label="Description" value={report.description} multiline />
                       <SpecRow icon="ruler" label="Measurement" value={report.measurements} />
                       <SpecRow icon="shapeCut" label="Shape & Cut" value={report.shape} />
                       <SpecRow icon="scale" label="Carat Weight" value={report.caratWeight} bold />
@@ -583,10 +586,10 @@ export default function CertificateCard({ report }: { report: GemReport }) {
                 </div>
               </div>
 
-              {/* ── RIGHT: Specimen Reticle + Signature + QR (47%) ── */}
+              {/* ── RIGHT: Specimen Reticle + Signature + QR (45%) ── */}
               <div
                 style={{
-                  width: "47%",
+                  width: "45%",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
