@@ -1,0 +1,26 @@
+Options -MultiViews
+RewriteEngine On
+
+# Redirect HTTP to HTTPS automatically
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirect index.html to homepage
+RewriteRule ^index\.html$ / [R=301,L]
+
+# Specific legacy redirects
+RewriteRule ^Testing_and_Certification\.html$ /testing-and-certification [R=301,L]
+RewriteRule ^admin/certificate-view\.php$ /certificate-view [R=301,L]
+
+# Redirect old .html requests to clean URLs
+RewriteCond %{THE_REQUEST} \s/+(.+)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# Serve static HTML files without requiring .html extension in URL
+# Even if a directory with the same name exists (e.g. products/ or blogs/)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^(.*?)/?$ $1.html [L]
+
+# Fallback for missing routes to 404 page
+ErrorDocument 404 /404.html

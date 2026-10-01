@@ -1,0 +1,1016 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette taken from the GGDL logo */
+  --color-ggdl-blue: #001b34;
+  --color-ggdl-gold: #c5a14d;
+  --color-lightgray: #f7f7f7;
+
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Certificates and report headings are set in a serif, as printed reports are */
+  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
+}
+
+:root {
+  /* How far the overlap panels pull down over the footer */
+  --overlap: 140px;
+  /* How far the reports grid pulls up over the hero */
+  --hero-overlap: 140px;
+
+  /* Certificate sheet palette — warmer than the site chrome, like printed stock */
+  --cert-gold: #b8963f;
+  --cert-gold-soft: #c9b183;
+  --cert-ink: #12283d;
+  --cert-paper: #fdfaf3;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --overlap: 40px;
+    --hero-overlap: 40px;
+  }
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: #333;
+  background-color: var(--color-lightgray);
+}
+
+/* ---------------------------------------------------------------- *
+ * Hero + reports grid
+ * ---------------------------------------------------------------- */
+
+.hero-section {
+  min-height: 560px;
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+  position: relative;
+}
+
+@media (max-width: 1024px) {
+  .hero-section {
+    min-height: 420px;
+  }
+}
+
+.report-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: 220px;
+  gap: 0;
+  min-height: 500px;
+  /* Pull the grid up so it overlaps the hero background */
+  margin-top: calc(var(--hero-overlap) * -1);
+  position: relative;
+  z-index: 5;
+}
+
+/* Desktop: 4 columns x 2 rows, with the second row centred */
+@media (min-width: 1024px) {
+  .report-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 260px 260px;
+    min-height: 520px;
+  }
+
+  .report-grid>div:nth-child(1) {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  .report-grid>div:nth-child(2) {
+    grid-area: 1 / 2 / 2 / 3;
+  }
+
+  .report-grid>div:nth-child(3) {
+    grid-area: 1 / 3 / 2 / 4;
+  }
+
+  .report-grid>div:nth-child(4) {
+    grid-area: 1 / 4 / 2 / 5;
+  }
+
+  .report-grid>div:nth-child(5) {
+    grid-area: 2 / 2 / 3 / 3;
+  }
+
+  .report-grid>div:nth-child(6) {
+    grid-area: 2 / 3 / 3 / 4;
+  }
+}
+
+@media (max-width: 767px) {
+  .report-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 250px;
+  }
+
+  .report-grid>div {
+    grid-area: auto !important;
+  }
+}
+
+/* Gold panels used for the DIAMOND / JEWELLERY report tiles */
+.gold-panel {
+  background-color: var(--color-ggdl-gold);
+  color: #0b0b0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.gold-panel .panel-inner {
+  max-width: 320px;
+}
+
+.gold-panel h3 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.gold-panel a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: rgb(0 0 0 / 0.85);
+  text-decoration: none;
+}
+
+/* White text panel for the Colored Stone tile */
+.white-panel {
+  position: absolute;
+  inset: 0;
+  background: rgb(255 255 255 / 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1.5rem;
+}
+
+.white-panel h3 {
+  color: #111;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.white-panel a {
+  color: #333;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- *
+ * Certificate verification band (full-bleed, fixed background)
+ * ---------------------------------------------------------------- */
+
+.fixed-hero {
+  background-image: url("/img/verification-bg.webp");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: #fff;
+  /* Break out of the container padding to span the viewport */
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  z-index: 0;
+}
+
+.fixed-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(8 11 20 / 0.6);
+  pointer-events: none;
+}
+
+.fixed-hero .hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* Deliberately overrides the heading's utility classes, as the original did */
+.fixed-hero h2 {
+  font-size: 2.4rem;
+  font-weight: 600;
+}
+
+/* iOS ignores fixed attachment; fall back to scroll on small screens */
+@media (max-width: 767px) {
+  .fixed-hero {
+    background-attachment: scroll;
+    height: 260px;
+  }
+
+  .fixed-hero h2 {
+    font-size: 1.6rem;
+  }
+}
+
+/* ---------------------------------------------------------------- *
+ * Laboratory services
+ * ---------------------------------------------------------------- */
+
+.services-section {
+  padding: 0 0 4rem;
+}
+
+.services-section .service-image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+.services-panel {
+  background: #fff;
+  padding: 3rem;
+}
+
+/* ---------------------------------------------------------------- *
+ * Testimonials slider
+ * ---------------------------------------------------------------- */
+
+.testimonials {
+  padding: 4rem 0;
+}
+
+.testimonials .wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.testimonials h2 {
+  font-size: 2.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.testimonial-slider {
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-slides {
+  position: relative;
+}
+
+.testimonial-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.testimonial-slide.active {
+  opacity: 1;
+  position: relative;
+}
+
+.testimonial-quote {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  font-style: italic;
+  color: #4b5563;
+  max-width: 800px;
+  margin: 0 auto 1.25rem;
+}
+
+.testimonial-author {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.testimonial-role {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.testimonial-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid rgb(31 41 55 / 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.testimonial-arrow.left {
+  left: 12px;
+}
+
+.testimonial-arrow.right {
+  right: 12px;
+}
+
+.testimonial-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+.testimonial-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: #d1d5db;
+  cursor: pointer;
+}
+
+.testimonial-dot.active {
+  background: var(--color-ggdl-blue);
+}
+
+@media (max-width: 640px) {
+  .testimonials {
+    padding: 2.5rem 0;
+  }
+
+  .testimonial-arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .testimonial-quote {
+    font-size: 1rem;
+  }
+}
+
+/* ---------------------------------------------------------------- *
+ * Overlapping "Reports & Certificates" panels above the footer
+ * ---------------------------------------------------------------- */
+
+.overlap-panels {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  position: relative;
+  z-index: 20;
+  margin-bottom: calc(var(--overlap) * -1);
+}
+
+.overlap-panels .panel {
+  min-height: 360px;
+  padding: 3.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+}
+
+.overlap-panels .panel.left {
+  background: #fff;
+  color: #111;
+}
+
+.overlap-panels .panel.right {
+  background: var(--color-ggdl-gold);
+  color: #0b0b0b;
+}
+
+.overlap-panels .panel h3 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.overlap-panels .panel p {
+  color: rgb(0 0 0 / 0.75);
+  max-width: 560px;
+}
+
+.overlap-panels .panel a {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .overlap-panels {
+    grid-template-columns: 1fr;
+  }
+
+  .overlap-panels .panel {
+    padding: 2rem;
+    min-height: 220px;
+  }
+}
+
+/* Footer sits behind the overlapping panels, its content clears them */
+.site-footer {
+  position: relative;
+  z-index: 10;
+}
+
+.site-footer.with-overlap {
+  padding-top: calc(var(--overlap) + 120px);
+}
+
+/* ---------------------------------------------------------------- *
+ * Shared page banner for interior pages
+ * ---------------------------------------------------------------- */
+
+.page-banner {
+  background-image:
+    linear-gradient(rgb(0 0 0 / 0.25), rgb(0 0 0 / 0.25)),
+    url("/img/page-banner.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2.25rem 0;
+  color: #fff;
+}
+
+.page-banner .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.page-banner h1 {
+  font-size: clamp(1.25rem, 5vw, 1.9rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* ---------------------------------------------------------------- *
+ * Navigation + forms
+ * ---------------------------------------------------------------- */
+
+.active-menu {
+  color: var(--color-ggdl-gold) !important;
+  font-weight: 800 !important;
+}
+
+.verify-hero {
+  padding: 2.5rem 0;
+}
+
+.verify-search {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.verify-input {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  border-radius: 0.25rem 0 0 0.25rem;
+  background: #fff;
+}
+
+.verify-btn {
+  background: var(--color-ggdl-blue);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.verify-note {
+  color: #374151;
+  max-width: 760px;
+  margin: 0.75rem auto 0;
+  text-align: center;
+}
+
+.form-input {
+  border: 1px solid #e5e7eb;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.25rem;
+  background: #fff;
+}
+
+.btn-submit {
+  background: #111827;
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 700;
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Interior prose pages: match the original's paragraph rhythm */
+.page-prose p+p {
+  margin-top: 1rem;
+}
+
+/* ---------------------------------------------------------------- *
+ * Brand logo (see also the block near line 945+)
+ * ---------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------- *
+ * Certificate sheet (report verification result)
+ * ---------------------------------------------------------------- */
+
+.cert-sheet {
+  background: var(--cert-paper);
+  border: 8px solid var(--cert-gold);
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgb(18 40 61 / 0.12);
+  font-family: var(--font-serif);
+  color: var(--cert-ink);
+}
+
+.cert-inner {
+  border: 1px dashed var(--cert-gold-soft);
+  padding: 2.25rem 2.5rem 2rem;
+}
+
+/* Identity block */
+.cert-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--cert-gold-soft);
+  padding-bottom: 1.25rem;
+}
+
+.cert-logo {
+  margin-bottom: 0.35rem;
+}
+
+.cert-lab-name {
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
+}
+
+.cert-motto {
+  margin-top: 0.85rem;
+  color: var(--cert-gold);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+
+.cert-meta {
+  text-align: right;
+  flex: none;
+}
+
+.cert-meta-label {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.cert-meta-value {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+
+.cert-meta-date {
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.cert-title {
+  font-size: 2rem;
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: 0.01em;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--cert-gold-soft);
+  margin-bottom: 1.5rem;
+}
+
+/* Graded properties + specimen */
+.cert-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 268px;
+  gap: 2rem;
+}
+
+.cert-aside {
+  border-left: 1px solid var(--cert-gold-soft);
+  padding-left: 1.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.cert-field {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.cert-field dt {
+  font-weight: 700;
+}
+
+.cert-field dd {
+  color: #1c344a;
+}
+
+/* Separates the grading results from the finishing/authenticity block */
+.cert-field-gap {
+  height: 1.5rem;
+}
+
+.cert-disclaimer {
+  margin-top: 1.75rem;
+  max-width: 34rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #23415c;
+}
+
+.cert-figure {
+  border: 1px solid var(--cert-gold-soft);
+  background: #fff;
+  padding: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.cert-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.cert-signature {
+  margin-bottom: 2rem;
+}
+
+.cert-grader {
+  font-weight: 700;
+  margin-bottom: 2.25rem;
+}
+
+.cert-sign-line {
+  border-top: 1px solid #4a5b6b;
+  margin-bottom: 0.5rem;
+}
+
+.cert-signatory {
+  font-size: 0.9375rem;
+}
+
+/* Bottom-right verification block */
+.cert-qr {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.cert-qr svg {
+  border: 1px solid var(--cert-gold-soft);
+  padding: 4px;
+  background: #fff;
+}
+
+.cert-qr-caption {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cert-gold);
+}
+
+.cert-qr-id {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* Actions under the sheet */
+.cert-print-btn,
+.cert-ghost-btn {
+  display: inline-block;
+  padding: 0.9rem 2.25rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 0.25rem;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+  cursor: pointer;
+}
+
+.cert-print-btn {
+  background: var(--cert-gold);
+  color: #fff;
+}
+
+.cert-print-btn:hover {
+  background: #a5842f;
+}
+
+.cert-ghost-btn {
+  border: 1px solid var(--cert-gold);
+  color: var(--cert-ink);
+}
+
+.cert-ghost-btn:hover {
+  background: rgb(184 150 63 / 0.1);
+}
+
+@media (max-width: 900px) {
+  .cert-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cert-aside {
+    border-left: 0;
+    border-top: 1px solid var(--cert-gold-soft);
+    padding-left: 0;
+    padding-top: 1.5rem;
+  }
+
+  .cert-figure {
+    max-width: 260px;
+  }
+
+  .cert-qr {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .cert-sheet {
+    border-width: 5px;
+    padding: 0.75rem;
+  }
+
+  .cert-inner {
+    padding: 1.25rem 1rem;
+  }
+
+  .cert-head {
+    flex-direction: column;
+  }
+
+  .cert-meta {
+    text-align: left;
+  }
+
+  .cert-title {
+    font-size: 1.4rem;
+    padding: 1rem 0;
+  }
+
+  .cert-field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}
+
+/* Mobile Sidebar Drawer Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
+
+
+/* ---------------------------------------------------------------- *
+ * Brand Logo sizing
+ * ---------------------------------------------------------------- */
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.brand-logo img {
+  object-fit: contain;
+  display: block;
+}
+
+/* ---------------------------------------------------------------- *
+ * Pure CSS Mobile Navigation Drawer (Zero-JS, 100% fail-proof)
+ * ---------------------------------------------------------------- */
+body:has(#mobile-menu-toggle:checked) {
+  overflow: hidden !important;
+}
+
+#mobile-drawer-wrapper {
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: visibility 0.28s ease, opacity 0.28s ease;
+}
+
+#mobile-drawer-wrapper #mobile-menu-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#mobile-drawer-wrapper #mobile-sidebar-drawer {
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* When the checkbox is checked, open the drawer with smooth 60fps animation */
+#mobile-menu-toggle:checked ~ #mobile-drawer-wrapper {
+  visibility: visible !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+
+#mobile-menu-toggle:checked ~ #mobile-drawer-wrapper #mobile-menu-backdrop {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+#mobile-menu-toggle:checked ~ #mobile-drawer-wrapper #mobile-sidebar-drawer {
+  transform: translateX(0%) !important;
+}
+
+/* ---------------------------------------------------------------- *
+ * Physical PVC / CR80 Plastic Card Print Optimization (Exact Size & Color)
+ * ---------------------------------------------------------------- */
+@page {
+  size: auto;
+  margin: 6mm;
+}
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+  }
+
+  /* Hide site chrome during print */
+  body > header,
+  body > footer,
+  nav,
+  header.site-header,
+  footer.site-footer,
+  .no-print,
+  .page-banner,
+  .cert-print-btn,
+  .cert-ghost-btn,
+  #mobile-drawer-wrapper,
+  #mobile-menu-toggle {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  main {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: transparent !important;
+  }
+
+  .print-card-wrapper {
+    width: 86mm !important;
+    height: 54mm !important;
+    max-width: 86mm !important;
+    max-height: 54mm !important;
+    min-width: 86mm !important;
+    min-height: 54mm !important;
+    margin: 6mm auto !important;
+    padding: 0 !important;
+    position: relative !important;
+    display: block !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: visible !important;
+  }
+
+  .print-card-scaler {
+    width: 860px !important;
+    height: 540px !important;
+    transform: scale(0.37795275) !important;
+    transform-origin: top left !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-card-article,
+  #certificate-card {
+    width: 860px !important;
+    height: 540px !important;
+    max-width: 860px !important;
+    max-height: 540px !important;
+    min-width: 860px !important;
+    min-height: 540px !important;
+    transform: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    border-radius: 14px !important;
+    border: 1.2px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  #certificate-card * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
